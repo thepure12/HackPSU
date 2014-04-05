@@ -4,14 +4,17 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class HackPSU implements ApplicationListener
 {
 	private OrthographicCamera camera;
+	private Display display;
 	private SpriteBatch batch;
-	private Stage currentStage, homeScreen;
 
 	@Override
 	public void create()
@@ -21,16 +24,14 @@ public class HackPSU implements ApplicationListener
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera(w, h);
 		camera.position.set(0, 0, 0);
-		homeScreen = new HomeScreen();
-		homeScreen.setCamera(camera);
-		currentStage = homeScreen;
-		Gdx.input.setInputProcessor(homeScreen);
+		display = new Display(w, h);
+		display.setCamera(camera);
+		Gdx.input.setInputProcessor(display);
 	}
 
 	@Override
 	public void dispose()
 	{
-
 	}
 
 	@Override
@@ -38,7 +39,10 @@ public class HackPSU implements ApplicationListener
 	{
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		currentStage.act(Gdx.graphics.getDeltaTime());
+		batch.begin();
+		display.getBackground().draw(batch);
+		batch.end();
+		display.render();
 	}
 
 	@Override
